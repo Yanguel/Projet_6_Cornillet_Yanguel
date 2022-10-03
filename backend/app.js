@@ -1,6 +1,16 @@
 // Importation d'express
 const express = require("express");
 
+//Importation de Mongoose puis connection à MongoDB
+const mongoose = require("mongoose");
+mongoose
+  .connect(
+    "mongodb+srv://Yanguel:0000@cluster0.dtatrcf.mongodb.net/?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
+
 // Constante de l'application avec express
 const app = express();
 
