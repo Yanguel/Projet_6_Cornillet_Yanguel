@@ -15,7 +15,7 @@ const normalizePort = (val) => {
   return false;
 };
 // "normalizePort" Permet d'indiquer le port que nous voulons
-const port = normalizePort("3000");
+const port = process.env.PORT || 3000;
 app.set("port", port);
 
 // "errorHandler" recherche les différentes erreurs et les gère de manière appropriée.
