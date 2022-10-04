@@ -15,7 +15,7 @@ const normalizePort = (val) => {
   return false;
 };
 // "normalizePort" Permet d'indiquer le port que nous voulons
-const port = process.env.PORT || 3000;
+const port = 3000;
 app.set("port", port);
 
 // "errorHandler" recherche les différentes erreurs et les gère de manière appropriée.
@@ -51,5 +51,5 @@ server.on("listening", () => {
   console.log("Listening on " + bind);
 });
 
-// Ecoute le localhost 3000 uniquement
+// Ecoute le localhost demandé
 server.listen(port);
