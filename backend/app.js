@@ -1,7 +1,7 @@
 // Importation d'express
 const express = require("express");
 const userRoutes = require("./routes/user");
-const thing = require("./models/Thing");
+const Thing = require("./models/Thing");
 //Importation de Mongoose puis connection à MongoDB
 const mongoose = require("mongoose");
 mongoose
@@ -14,6 +14,8 @@ mongoose
 
 // Constante de l'application avec express
 const app = express();
+
+app.use(express.json());
 
 // Permet d'enlever l'erreur CORS (Sécurité pour requetes malvaillantes)
 app.use((req, res, next) => {
@@ -31,6 +33,7 @@ app.use((req, res, next) => {
 // Permet d'enregistrer l'objet crée par l'utilisateur
 // et de l'afficher
 app.post("/api/sauces", (req, res, next) => {
+  console.log(req.body);
   delete req.body._id;
   const thing = new Thing({
     ...req.body,
@@ -41,7 +44,7 @@ app.post("/api/sauces", (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 });
 
-app.use("/api/sauces", (req, res, next) => {
+app.get("/api/sauces", (req, res, next) => {
   const stuff = [
     {
       _id: "oeihfzeoi",
@@ -108,9 +111,6 @@ app.delete("/api/stuff/:id", (req, res, next) => {
 app.use((req, res, next) => {
   res.json({ message: "Votre requête à bien été recu ! " });
   next();
-});
-app.use((req, res) => {
-  console.log("Réponse envoyé avec succès");
 });
 
 app.use("/api/auth", userRoutes);
