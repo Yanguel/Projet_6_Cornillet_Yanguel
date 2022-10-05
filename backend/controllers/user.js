@@ -1,6 +1,7 @@
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+
 // Enregistrement de nouveaux utilisateurs et
 // Hachage du mot de passe
 exports.signup = (req, res, next) => {
@@ -39,7 +40,7 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET_123*", {
+            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET_123", {
               expiresIn: "24h",
             }),
           });
