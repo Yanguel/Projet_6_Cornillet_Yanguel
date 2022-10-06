@@ -3,13 +3,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/user");
-const stuffRoutes = require("./routes/sauces");
+const saucesRoutes = require("./routes/sauces");
 const path = require("path");
 
 //Connection à MongoDB via Mongoose
 mongoose
   .connect(
-    "mongodb+srv://Projet-6-utilisateur:0000@cluster0.dtatrcf.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://Projet-6-new:0000@cluster0.dtatrcf.mongodb.net/?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -32,9 +32,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
+app.use(bodyParser.json());
 //direction vers routes/sauces
-app.use("/api/sauces", stuffRoutes);
+app.use("/api/sauces", saucesRoutes);
 // direction vers routes/user
 app.use("/api/auth", userRoutes);
 

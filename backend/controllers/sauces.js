@@ -1,21 +1,21 @@
-const Thing = require("../models/Thing");
+const Sauce = require("../models/sauce");
 const fs = require("fs");
 
 // Permet d'enregistrer l'objet crée par l'utilisateur
 // et de l'afficher, tout en gérant les images
 exports.createThing = (req, res, next) => {
-  const thingObject = JSON.parse(req.body.thing);
+  console.log(req.body);
+  const thingObject = JSON.parse(req.body.sauce);
   delete thingObject._id;
   delete thingObject._userId;
-  const thing = new Thing({
+  const sauce = new Sauce({
     ...thingObject,
-    userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
   });
 
-  thing
+  sauce
     .save()
     .then(() => {
       res.status(201).json({ message: "Objet enregistré !" });
@@ -36,7 +36,7 @@ exports.modifyThing = (req, res, next) => {
     : { ...req.body };
 
   delete thingObject._userId;
-  Thing.findOne({ _id: req.params.id })
+  Sauce.findOne({ _id: req.params.id })
     .then((thing) => {
       // Si l'userId est différent de l'userId du token
       if (thing.userId != req.auth.userId) {
@@ -58,14 +58,14 @@ exports.modifyThing = (req, res, next) => {
 };
 //Permet de supprimé un élément
 exports.deleteThing = (req, res, next) => {
-  Thing.findOne({ _id: req.params.id })
+  Sauce.findOne({ _id: req.params.id })
     .then((thing) => {
       if (thing.userId != req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
         const filename = thing.imageUrl.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
-          Thing.deleteOne({ _id: req.params.id })
+          Sauce.deleteOne({ _id: req.params.id })
             .then(() => {
               res.status(200).json({ message: "Objet supprimé !" });
             })
@@ -80,14 +80,14 @@ exports.deleteThing = (req, res, next) => {
 
 // Récuperer un schéma en particulier
 exports.getOneThing = (req, res, next) => {
-  Thing.findOne({ _id: req.params.id })
+  Sauce.findOne({ _id: req.params.id })
     .then((thing) => res.status(200).json(thing))
     .catch((error) => res.status(404).json({ error }));
 };
 
 // Recuperer tout les objets
 exports.getAllThing = (req, res, next) => {
-  Thing.find({ _id: req.params.id })
+  Sauce.find()
     .then((things) => res.status(200).json(things))
     .catch((error) => res.status(404).json({ error }));
 };

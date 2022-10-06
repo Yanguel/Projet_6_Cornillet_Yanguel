@@ -24,4 +24,4 @@ utilisateurs qui n'ont pas aimé (= disliked) la sauce
   usersDisliked: { type: [String], default: [] },
 });
 
-module.exports = mongoose.model("Thing", thingSchema);
+module.exports = mongoose.model("Sauce", thingSchema);
