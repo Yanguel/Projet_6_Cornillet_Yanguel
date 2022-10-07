@@ -33,11 +33,14 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
 //direction vers routes/sauces
 app.use("/api/sauces", saucesRoutes);
+
 // direction vers routes/user
 app.use("/api/auth", userRoutes);
 
+// Midleware qui permet de charger les fichiers qui sont dans le repertoire images
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // permet d'exporter l'application

@@ -34,17 +34,16 @@ exports.modifyThing = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-
   delete thingObject._userId;
   Sauce.findOne({ _id: req.params.id })
-    .then((thing) => {
+    .then((sauce) => {
       // Si l'userId est différent de l'userId du token
-      if (thing.userId != req.auth.userId) {
+      if (sauce.userId != req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       }
       // Sinon si c'est bien le bon utilisateur
       else {
-        Thing.updateOne(
+        Sauce.updateOne(
           { _id: req.params.id },
           { ...thingObject, _id: req.params.id }
         )
@@ -81,13 +80,13 @@ exports.deleteThing = (req, res, next) => {
 // Récuperer un schéma en particulier
 exports.getOneThing = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .then((thing) => res.status(200).json(thing))
+    .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
 
 // Recuperer tout les objets
 exports.getAllThing = (req, res, next) => {
   Sauce.find()
-    .then((things) => res.status(200).json(things))
+    .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(404).json({ error }));
 };
