@@ -26,46 +26,53 @@ exports.createThing = (req, res, next) => {
 };
 // Permet de mettre à jour un Schéma déja existant
 exports.modifyThing = (req, res, next) => {
-  const sauceObject =
-    // Une image existe elle ?
-    req.file
-      ? // Si la modification contient une image =>
-        // Nous récuperont l'objet en parsant la chaine de caractère et recréant l'URL de l'image
-        {
-          ...JSON.parse(req.body.Sauce),
-          imageUrl: `${req.protocol}://${req.get("host")}/images/${
-            req.file.filename
-          }`,
-        }
-      : // Si il n'y a pas d'objet de transmit alors recuperer directement dans le corps de la requete
-        { ...req.body };
-
-  //Supprime le userId pour éviter les fraudes
-  delete sauceObject._userId;
-
+  req.file
+    ? // Si la modification contient une image => Utilisation de l'opérateur ternaire comme structure conditionnelle.
+      (Sauce.findOne({
+        _id: req.params.id,
+      }).then((sauce) => {
+        // On supprime l'ancienne image du serveur
+        const filename = sauce.imageUrl.split("/images/")[1];
+        fs.unlinkSync(`images/${filename}`);
+      }),
+      (sauceObject = {
+        // On modifie les données et on ajoute la nouvelle image
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }))
+    : // Opérateur ternaire équivalent à if() {} else {} => condition ? Instruction si vrai : Instruction si faux
+      // Si la modification ne contient pas de nouvelle image
+      (sauceObject = {
+        ...req.body,
+      });
   // Rechercher l'objet dans la base de donnée pour récuperer et vérifier
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      // Si l'userId est différent de l'userId du token
-      if (sauce.userId != req.auth.userId) {
-        console.log("userId différent du créateur ");
-        res.status(401).json({ message: "Not authorized" });
-      }
-      // Sinon si c'est bien le bon utilisateur
-      else {
-        Sauce.updateOne(
-          { _id: req.params.id },
-          { ...sauceObject, _id: req.params.id }
-        )
-          .then(() => res.status(200).json({ message: "Sauce modifiée!" }))
-          .catch((error) => res.status(401).json({ error }));
-      }
-    })
-    .catch((error) => {
-      console.log("Erreur dans findOne de modifyThing");
-      res.status(400).json({ error });
-    });
+  Sauce.findOne({ _id: req.params.id });
+
+  // Sinon si c'est bien le bon utilisateur
+  Sauce.updateOne(
+    // On applique les paramètre de sauceObject
+    {
+      _id: req.params.id,
+    },
+    {
+      ...sauceObject,
+      _id: req.params.id,
+    }
+  )
+    .then(() =>
+      res.status(200).json({
+        message: "Sauce modifiée !",
+      })
+    )
+    .catch((error) =>
+      res.status(400).json({
+        error,
+      })
+    );
 };
+
 //Permet de supprimé un élément
 exports.deleteThing = (req, res, next) => {
   Sauce.findOne({
