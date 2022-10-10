@@ -26,7 +26,6 @@ exports.createThing = (req, res, next) => {
 };
 // Permet de mettre à jour un Schéma déja existant
 exports.modifyThing = (req, res, next) => {
-  console.log("test d'entré");
   const sauceObject =
     // Une image existe elle ?
     req.file
@@ -63,30 +62,41 @@ exports.modifyThing = (req, res, next) => {
       }
     })
     .catch((error) => {
-      console.log("test erreur");
+      console.log("Erreur dans findOne de modifyThing");
       res.status(400).json({ error });
     });
 };
 //Permet de supprimé un élément
 exports.deleteThing = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((thing) => {
-      if (thing.userId != req.auth.userId) {
-        res.status(401).json({ message: "Not authorized" });
-      } else {
-        const filename = thing.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
-          Sauce.deleteOne({ _id: req.params.id })
-            .then(() => {
-              res.status(200).json({ message: "Objet supprimé !" });
+  Sauce.findOne({
+    _id: req.params.id,
+  })
+    .then((sauce) => {
+      // Pour extraire ce fichier, on récupère l'url de la sauce, et on le split autour de la chaine de caractères, donc le nom du fichier
+      const filename = sauce.imageUrl.split("/images/")[1];
+      // Avec ce nom de fichier, on appelle unlink pour suppr le fichier
+      fs.unlink(`images/${filename}`, () => {
+        // On supprime le document correspondant de la base de données
+        Sauce.deleteOne({
+          _id: req.params.id,
+        })
+          .then(() =>
+            res.status(200).json({
+              message: "Sauce supprimée !",
             })
-            .catch((error) => res.status(401).json({ error }));
-        });
-      }
+          )
+          .catch((error) =>
+            res.status(400).json({
+              error,
+            })
+          );
+      });
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch((error) =>
+      res.status(500).json({
+        error,
+      })
+    );
 };
 // Récuperer un schéma en particulier
 exports.getOneThing = (req, res, next) => {
