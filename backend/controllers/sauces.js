@@ -26,14 +26,14 @@ exports.createThing = (req, res, next) => {
 };
 // Permet de mettre à jour un Schéma déja existant
 exports.modifyThing = (req, res, next) => {
-  console.log(req.params.id);
+  console.log("test d'entré");
   const sauceObject =
     // Une image existe elle ?
     req.file
       ? // Si la modification contient une image =>
         // Nous récuperont l'objet en parsant la chaine de caractère et recréant l'URL de l'image
         {
-          ...JSON.parse(req.body.sauce),
+          ...JSON.parse(req.body.Sauce),
           imageUrl: `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`,
@@ -49,6 +49,7 @@ exports.modifyThing = (req, res, next) => {
     .then((sauce) => {
       // Si l'userId est différent de l'userId du token
       if (sauce.userId != req.auth.userId) {
+        console.log("userId différent du créateur ");
         res.status(401).json({ message: "Not authorized" });
       }
       // Sinon si c'est bien le bon utilisateur
@@ -57,12 +58,12 @@ exports.modifyThing = (req, res, next) => {
           { _id: req.params.id },
           { ...sauceObject, _id: req.params.id }
         )
-          .then(() => res.status(200).json({ message: "Objet modifié!" }))
+          .then(() => res.status(200).json({ message: "Sauce modifiée!" }))
           .catch((error) => res.status(401).json({ error }));
       }
     })
     .catch((error) => {
-      console.log("test ", req.body);
+      console.log("test erreur");
       res.status(400).json({ error });
     });
 };
