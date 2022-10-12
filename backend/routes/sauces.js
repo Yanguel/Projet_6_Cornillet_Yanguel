@@ -20,4 +20,7 @@ router.get("/:id", auth, saucesCtrl.getOneThing);
 //Permet de supprimé un élément
 router.delete("/:id", auth, saucesCtrl.deleteThing);
 
+//Permet de liker une sauce
+router.post("/:id/like", auth, saucesCtrl.LikeSauce);
+
 module.exports = router;

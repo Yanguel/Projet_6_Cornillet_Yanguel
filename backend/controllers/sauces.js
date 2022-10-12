@@ -117,3 +117,76 @@ exports.getAllThing = (req, res, next) => {
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(404).json({ error }));
 };
+
+/*
+Si like = 1,
+l'utilisateur aime (= like) la
+sauce. 
+Si like = 0, l'utilisateur
+annule son like ou son dislike. 
+Si like = -1,
+l'utilisateur n'aime pas (=
+dislike) la sauce
+*/
+
+// Mettre un like
+exports.LikeSauce = (req, res, next) => {
+  // Like présent dans le body
+  let like = req.body.like;
+  // On prend le userID
+  let userId = req.body.userId;
+  // On prend l'id de la sauce
+  let sauceId = req.params.id;
+
+  Sauce.findOne({ _id: req.params.id });
+  // Si l'utilisateur like le sauce
+  if (like === 1) {
+    // Rajouter 1 à la variable crée par le front qui est à 0
+    console.log(like);
+    Sauce.updateOne({
+      userId: like++,
+    })
+      .then(() =>
+        res.status(200).json({
+          message: "j'aime, ajouté !",
+        })
+      )
+      .catch((error) =>
+        res.status(400).json({
+          error,
+        })
+      );
+  }
+
+  // Sinon si l'utilisateur annule son like ou son dislike
+  else if ((like = 0)) {
+    // Rajouter ou enlever 1 à la variable fait par le frond
+    Sauce.updateOne({
+      userId: like++ || like--,
+    })
+      .then(() => res.status(200))
+      .catch((error) =>
+        res.status(400).json({
+          error,
+        })
+      );
+  }
+
+  // Sinon si l'utilisateur met un dislike
+  else if ((like = -1)) {
+    // Enlever 1 à la variable fait par le frond
+    Sauce.updateOne({
+      userId: like--,
+    })
+      .then(() =>
+        res.status(200).json({
+          message: "j'aime ajouté !",
+        })
+      )
+      .catch((error) =>
+        res.status(400).json({
+          error,
+        })
+      );
+  }
+};
