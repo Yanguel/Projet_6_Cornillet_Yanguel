@@ -129,64 +129,65 @@ l'utilisateur n'aime pas (=
 dislike) la sauce
 */
 
-// Mettre un like
-exports.LikeSauce = (req, res, next) => {
-  // Like présent dans le body
-  let like = req.body.like;
+exports.LikeSauce = async (req, res, next) => {
   // On prend le userID
   let userId = req.body.userId;
-  // On prend l'id de la sauce
-  let sauceId = req.params.id;
 
-  Sauce.findOne({ _id: req.params.id });
+  console.log(req.body.like);
   // Si l'utilisateur like le sauce
-  if (like === 1) {
-    // Rajouter 1 à la variable crée par le front qui est à 0
-    console.log(like);
-    Sauce.updateOne({
-      userId: like++,
-    })
-      .then(() =>
-        res.status(200).json({
+  try {
+    switch (req.body.like) {
+      case 1:
+        await Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $push: { usersLiked: userId },
+            $inc: { likes: 1 },
+          }
+        );
+        return res.status(200).json({
           message: "j'aime, ajouté !",
-        })
-      )
-      .catch((error) =>
-        res.status(400).json({
-          error,
-        })
-      );
-  }
-
-  // Sinon si l'utilisateur annule son like ou son dislike
-  else if ((like = 0)) {
-    // Rajouter ou enlever 1 à la variable fait par le frond
-    Sauce.updateOne({
-      userId: like++ || like--,
-    })
-      .then(() => res.status(200))
-      .catch((error) =>
-        res.status(400).json({
-          error,
-        })
-      );
-  }
-
-  // Sinon si l'utilisateur met un dislike
-  else if ((like = -1)) {
-    // Enlever 1 à la variable fait par le frond
-    Sauce.updateOne({
-      userId: like--,
-    })
-      .then(() =>
-        res.status(200).json({
-          message: "j'aime ajouté !",
-        })
-      )
-      .catch((error) =>
-        res.status(400).json({
-          error,
-        })
-      );
+        });
+      case -1:
+        await Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $push: { usersDisliked: userId },
+            $inc: { dislikes: 1 },
+          }
+        );
+        return res.status(200).json({
+          message: "je n'aime pas, ajouté !",
+        });
+      case 0:
+        let choix = "";
+        const sauce = await Sauce.findOne({ _id: req.params.id });
+        if (sauce.usersLiked.includes(userId)) {
+          choix = `j'aime`;
+          await Sauce.updateOne(
+            { _id: req.params.id },
+            {
+              $pull: { usersLiked: userId },
+              $inc: { likes: -1 },
+            }
+          );
+        } else if (sauce.usersDisliked.includes(userId)) {
+          choix = `je n'aime pas`;
+          await Sauce.updateOne(
+            { _id: req.params.id },
+            {
+              $pull: { usersDisliked: userId },
+              $inc: { dislikes: -1 },
+            }
+          );
+        }
+        return res.status(200).json({
+          message: `${choix} retiré`,
+        });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      error,
+    });
   }
 };
