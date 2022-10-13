@@ -1,5 +1,6 @@
 const express = require("express");
 
+const verifyPassword = require("../middleware/verifyPassword");
 // On crée un router avec la méthode mise à disposition par Express
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const router = express.Router();
 const userCtrl = require("../controllers/user");
 
 // Chiffre le mot de passe de l'utilisateur, ajoute l'utilisateur à la base dedonnées
-router.post("/signup", userCtrl.signup);
+router.post("/signup", verifyPassword, userCtrl.signup);
 // Vérifie les informations d'identification de l'utilisateur, enrenvoyant l'identifiant userID depuis la base de données et un TokenWeb JSON signé(contenant également l'identifiant userID)
 router.post("/login", userCtrl.login);
 

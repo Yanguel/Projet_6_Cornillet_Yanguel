@@ -1,9 +1,14 @@
 // Importation d'express
 const express = require("express");
 const bodyParser = require("body-parser");
+
+// Plugin Mongoose pour se connecter à la data base Mongo Db
 const mongoose = require("mongoose");
+
 const userRoutes = require("./routes/user");
 const saucesRoutes = require("./routes/sauces");
+
+// Plugin qui sert dans l'upload des images et permet de travailler avec les répertoires et chemin de fichier
 const path = require("path");
 
 // Utilisation du MiddleWare permettant de se proteger des XSS (Cross-site scripting)

@@ -24,7 +24,7 @@ exports.createThing = (req, res, next) => {
       res.status(400).json({ error });
     });
 };
-// Permet de mettre à jour un Schéma déja existant
+// Permet de mettre à jour un Schéma déja existant.
 exports.modifyThing = (req, res, next) => {
   req.file
     ? // Si la modification contient une image => Utilisation de l'opérateur ternaire comme structure conditionnelle.
@@ -72,8 +72,7 @@ exports.modifyThing = (req, res, next) => {
       })
     );
 };
-
-//Permet de supprimé un élément
+//Permet de supprimé un élément.
 exports.deleteThing = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id,
@@ -105,35 +104,24 @@ exports.deleteThing = (req, res, next) => {
       })
     );
 };
-// Récuperer un schéma en particulier
+// Récuperer un schéma en particulier.
 exports.getOneThing = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
-// Recuperer tout les objets
+// Recuperer tout les objets.
 exports.getAllThing = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(404).json({ error }));
 };
-
-/*
-Si like = 1,
-l'utilisateur aime (= like) la
-sauce. 
-Si like = 0, l'utilisateur
-annule son like ou son dislike. 
-Si like = -1,
-l'utilisateur n'aime pas (=
-dislike) la sauce
-*/
-
+// Gestion des likes ou dislikes.
 exports.LikeSauce = async (req, res, next) => {
   // On prend le userID
   let userId = req.body.userId;
 
-  console.log(req.body.like);
+  //console.log(req.body.like);
   // Si l'utilisateur like le sauce
   try {
     switch (req.body.like) {
