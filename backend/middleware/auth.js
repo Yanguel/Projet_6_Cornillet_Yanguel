@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 /* Permet vérifier que l’utilisateur est bien connecté et de transmettre les informations 
 de connexion aux différentes méthodes qui vont gérer les requêtes. */
 module.exports = (req, res, next) => {

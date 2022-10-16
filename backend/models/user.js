@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // package qui valide l'unicité de l'email
 const uniqueValidator = require("mongoose-unique-validator");
 
-// Directive d'information d'authentification
+// CCréation du schéma concernant la création d'un compte.
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

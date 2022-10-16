@@ -15,6 +15,6 @@ passwordSchema
   .digits() // Doit avoir au moins un chiffre
   .is()
   .not()
-  .oneOf(["Passw0rd", "Password123"]); // Blacklist de valeurs à proscrire
+  .oneOf(["Password123"]); // Blacklist de valeurs à proscrire
 
 module.exports = passwordSchema;

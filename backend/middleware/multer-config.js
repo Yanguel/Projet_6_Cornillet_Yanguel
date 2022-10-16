@@ -1,4 +1,4 @@
-// lle package "multer"permet de gérer les fichiers entrants dans les requêtes HTTP
+// Le package "multer" permet de gérer les fichiers entrants dans les requêtes HTTP
 const multer = require("multer");
 
 // On crée un dictionnaire des types MIME pour définire le format des images
