@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   if (!passwordSchema.validate(req.body.password)) {
     res.writeHead(
       400,
-      '{message : "Mot de passe requis : 5 caractères minimun. Au moins 1 Majuscule, 1 minuscule. Sans espaces"}',
+      '{message : "Mot de passe requis : 5 caractères minimun. Au moins 1 Majuscule, 1 minuscule."}',
       {
         "content-type": "application/json",
       }

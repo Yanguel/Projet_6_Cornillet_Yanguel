@@ -52,7 +52,7 @@ exports.modifyThing = (req, res, next) => {
 
   // Sinon si c'est bien le bon utilisateur
   Sauce.updateOne(
-    // On applique les paramètre de sauceObject
+    // On applique les paramètres de sauceObject
     {
       _id: req.params.id,
     },
