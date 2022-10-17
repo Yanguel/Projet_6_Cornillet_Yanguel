@@ -78,6 +78,11 @@ exports.deleteThing = (req, res, next) => {
     _id: req.params.id,
   })
     .then((sauce) => {
+      if (sauce.userId != req.userId) {
+        return res
+          .status(403)
+          .json({ error: new Error("Utilisateur non autorisé") });
+      }
       // Pour extraire ce fichier, on récupère l'url de la sauce, et on le split autour de la chaine de caractères, donc le nom du fichier
       const filename = sauce.imageUrl.split("/images/")[1];
       // Avec ce nom de fichier, on appelle unlink pour suppr le fichier

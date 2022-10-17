@@ -13,7 +13,7 @@ const path = require("path");
 
 // Utilisation du MiddleWare permettant de se proteger des XSS (Cross-site scripting)
 // et contre certaines vulnérabilités Web bien connues en définissant les en-têtes HTTP de manière appropriée.
-// const helmet = require("helmet");
+const helmet = require("helmet");
 
 //Connection à MongoDB via Mongoose
 mongoose
@@ -26,7 +26,7 @@ mongoose
 
 // Constante de l'application avec express
 const app = express();
-// app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
 // Permet d'enlever l'erreur CORS (Sécurité pour requetes malvaillantes)
 app.use((req, res, next) => {
