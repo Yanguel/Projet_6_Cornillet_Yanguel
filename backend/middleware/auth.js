@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
     }
     // si tout est valide on passe au prochain middleware
     else {
-      req.userId = userId;
+      req.auth = { userId };
       next();
     }
   } catch (error) {

@@ -43,7 +43,6 @@ const errorHandler = (error) => {
 
 // Création d'un serveur
 const server = http.createServer(app);
-
 server.on("error", errorHandler);
 server.on("listening", () => {
   const address = server.address();

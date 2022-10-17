@@ -78,7 +78,7 @@ exports.deleteThing = (req, res, next) => {
     _id: req.params.id,
   })
     .then((sauce) => {
-      if (sauce.userId != req.userId) {
+      if (sauce.userId != req.auth.userId) {
         return res
           .status(403)
           .json({ error: new Error("Utilisateur non autorisé") });

@@ -1,6 +1,8 @@
 // Importation d'express
 const express = require("express");
 const bodyParser = require("body-parser");
+// Permet de lire le fichier "env"
+require("dotenv").config();
 
 // Plugin Mongoose pour se connecter à la data base Mongo Db
 const mongoose = require("mongoose");
@@ -15,14 +17,25 @@ const path = require("path");
 // et contre certaines vulnérabilités Web bien connues en définissant les en-têtes HTTP de manière appropriée.
 const helmet = require("helmet");
 
+const rateLimit = require("express-rate-limit");
+
+// Permet d'éviter un nombre de tentatives important
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // fenetre de 15min
+  max: 100, // 100 tentatives
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 //Connection à MongoDB via Mongoose
 mongoose
-  .connect(
-    "mongodb+srv://Projet-6-new:0000@cluster0.dtatrcf.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  // La chaine de caractère disponible dans .Env
+  .connect(process.env.MONGOCONNECT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .catch((error) => console.log("Connexion à MongoDB échouée !", error));
 
 // Constante de l'application avec express
 const app = express();
@@ -48,7 +61,7 @@ app.use(bodyParser.json());
 app.use("/api/sauces", saucesRoutes);
 
 // direction vers routes/user
-app.use("/api/auth", userRoutes);
+app.use("/api/auth", apiLimiter, userRoutes);
 
 // Midleware qui permet de charger les fichiers qui sont dans le repertoire images
 app.use("/images", express.static(path.join(__dirname, "images")));
