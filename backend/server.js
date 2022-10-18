@@ -16,10 +16,10 @@ const normalizePort = (val) => {
 };
 // "normalizePort" Permet d'indiquer le port que nous voulons
 const port = normalizePort("3000");
+// Donne le nom du paramètre à la valeur
 app.set("port", port);
 
 // "errorHandler" recherche les différentes erreurs et les gère de manière appropriée.
-// Elle est ensuite enregistrée dans le serveur ;
 const errorHandler = (error) => {
   if (error.syscall !== "listen") {
     throw error;

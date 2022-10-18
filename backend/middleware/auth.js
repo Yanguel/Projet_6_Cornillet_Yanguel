@@ -1,3 +1,4 @@
+// Permet l'échange des tokens entre les pages
 const jwt = require("jsonwebtoken");
 
 /* Permet vérifier que l’utilisateur est bien connecté et de transmettre les informations 

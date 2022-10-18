@@ -1,22 +1,14 @@
-// Importation d'express
 const express = require("express");
-const bodyParser = require("body-parser");
-// Permet de lire le fichier "env"
+// Permet de lire le fichier ".env"
 require("dotenv").config();
-
-// Plugin Mongoose pour se connecter à la data base Mongo Db
 const mongoose = require("mongoose");
-
 const userRoutes = require("./routes/user");
 const saucesRoutes = require("./routes/sauces");
-
-// Plugin qui sert dans l'upload des images et permet de travailler avec les répertoires et chemin de fichier
+// Plugin qui sert dans l'upload des images et permet de travailler avec
+//les répertoires et chemin de fichier
 const path = require("path");
-
 // Utilisation du MiddleWare permettant de se proteger des XSS (Cross-site scripting)
-// et contre certaines vulnérabilités Web bien connues en définissant les en-têtes HTTP de manière appropriée.
 const helmet = require("helmet");
-
 const rateLimit = require("express-rate-limit");
 
 // Permet d'éviter un nombre de tentatives important
@@ -27,7 +19,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-//Connection à MongoDB via Mongoose
+//Connection à MongoDB via le module Mongoose
 mongoose
   // La chaine de caractère disponible dans .Env
   .connect(process.env.MONGOCONNECT, {
@@ -41,7 +33,7 @@ mongoose
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
-// Permet d'enlever l'erreur CORS (Sécurité pour requetes malvaillantes)
+// Permet d'enlever l'erreur CORS (Sécurité pour requetes venant d'autre HTTP)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -55,7 +47,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+// intercepte les requetes JSON et met la requete dans req.body
+app.use(express.json());
 
 //direction vers routes/sauces
 app.use("/api/sauces", saucesRoutes);

@@ -4,7 +4,6 @@ const fs = require("fs");
 // Permet d'enregistrer l'objet crée par l'utilisateur
 // et de l'afficher, tout en gérant les images
 exports.createThing = (req, res, next) => {
-  console.log(req.body);
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   delete sauceObject._userId;
