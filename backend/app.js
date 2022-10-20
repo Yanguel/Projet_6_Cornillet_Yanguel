@@ -10,6 +10,8 @@ const path = require("path");
 // Utilisation du MiddleWare permettant de se proteger des XSS (Cross-site scripting)
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+// Package permettant d'éviter l'injection de MongoDB (Sécurité)
+const mongoSanitize = require("express-mongo-sanitize");
 
 // Permet d'éviter un nombre de tentatives important
 const apiLimiter = rateLimit({
@@ -32,6 +34,7 @@ mongoose
 // Constante de l'application avec express
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(mongoSanitize);
 
 // Permet d'enlever l'erreur CORS (Sécurité pour requetes venant d'autre HTTP)
 app.use((req, res, next) => {
