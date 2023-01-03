@@ -34,7 +34,7 @@ mongoose
 // Constante de l'application avec express
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(mongoSanitize);
+app.use(mongoSanitize());
 
 // Permet d'enlever l'erreur CORS (Sécurité pour requetes venant d'autre HTTP)
 app.use((req, res, next) => {
